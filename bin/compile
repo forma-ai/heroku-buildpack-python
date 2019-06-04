@@ -31,6 +31,8 @@ ROOT_DIR=$(dirname "$BIN_DIR")
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
+# get the client name/number from the first part of the settings module specifier (i.e. c1124.backend.production)
+CLIENT_DIRNAME=$(echo $(cat "$ENV_DIR/DJANGO_SETTINGS_MODULE") | cut -d'.' -f1)
 
 # Export Path variables, for use in sub-scripts.
 export BUILD_DIR CACHE_DIR ENV_DIR

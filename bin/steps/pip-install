@@ -42,8 +42,11 @@ if [ ! "$SKIP_PIP_INSTALL" ]; then
         exit 1
     fi
 
-    puts-step "Loading requirements.txt custom repo url and exporting into pip install"
-    export GITHUB_TOKEN="$(cat "$ENV_DIR/GITHUB_TOKEN")" && /app/.heroku/python/bin/pip install -r "$BUILD_DIR/requirements.txt" --exists-action=w --src=/app/.heroku/src --disable-pip-version-check --no-cache-dir 2>&1 | tee "$WARNINGS_LOG" | cleanup | indent
+    puts-step "Loading client specific requirements.txt and pip installing from private repo (using github token)"
+    if [ ! -f "$BUILD_DIR/$CLIENT_DIRNAME/requirements.txt" ]; then
+        exit 1
+    fi
+    export GITHUB_TOKEN="$(cat "$ENV_DIR/GITHUB_TOKEN")" && /app/.heroku/python/bin/pip install -r "$BUILD_DIR/$CLIENT_DIRNAME/requirements.txt" --exists-action=w --src=/app/.heroku/src --disable-pip-version-check --no-cache-dir 2>&1 | tee "$WARNINGS_LOG" | cleanup | indent
 
     PIP_STATUS="${PIPESTATUS[0]}"
     set -e
@@ -56,7 +59,7 @@ if [ ! "$SKIP_PIP_INSTALL" ]; then
     fi
 
     # Smart Requirements handling
-    cp requirements.txt .heroku/python/requirements-declared.txt
+    cp $CLIENT_DIRNAME/requirements.txt .heroku/python/requirements-declared.txt
     /app/.heroku/python/bin/pip freeze --disable-pip-version-check > .heroku/python/requirements-installed.txt
 
     echo
