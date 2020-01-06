@@ -48,13 +48,10 @@ if [ ! "$SKIP_PIP_INSTALL" ]; then
         exit 1
     fi
     
-    puts-step "Exporting GITHUB_TOKEN"
-    puts-step "ENV_DIR=$ENVDIR"
     puts-step "location: $BUILD_DIR/$CLIENT_DIRNAME/requirements.txt"
     
     export GITHUB_TOKEN="$(cat "$ENV_DIR/GITHUB_TOKEN")" && /app/.heroku/python/bin/pip install -r "$BUILD_DIR/$CLIENT_DIRNAME/requirements.txt" --exists-action=w --src=/app/.heroku/src --disable-pip-version-check --no-cache-dir 2>&1 | tee "$WARNINGS_LOG" | cleanup | indent
     
-    puts-step "GITHUB_TOKEN=$GITHUB_TOKEN"
     PIP_STATUS="${PIPESTATUS[0]}"
     set -e
 
