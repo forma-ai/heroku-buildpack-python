@@ -52,7 +52,7 @@ if [ ! "$SKIP_PIP_INSTALL" ]; then
     
     export PRIVATE_INDEX_URL="$(cat "$ENV_DIR/PRIVATE_INDEX_URL")" && \
       /app/.heroku/python/bin/pip install -r "$BUILD_DIR/$CLIENT_DIRNAME/requirements.txt" \
-      --index-url=PRIVATE_INDEX_AUTH_URL \
+      --index-url=PRIVATE_INDEX_URL \
       --exists-action=w \
       --src=/app/.heroku/src \
       --disable-pip-version-check \
