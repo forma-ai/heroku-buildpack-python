@@ -50,7 +50,13 @@ if [ ! "$SKIP_PIP_INSTALL" ]; then
     
     puts-step "location: $BUILD_DIR/$CLIENT_DIRNAME/requirements.txt"
     
-    export GITHUB_TOKEN="$(cat "$ENV_DIR/GITHUB_TOKEN")" && /app/.heroku/python/bin/pip install -r "$BUILD_DIR/$CLIENT_DIRNAME/requirements.txt" --exists-action=w --src=/app/.heroku/src --disable-pip-version-check --no-cache-dir 2>&1 | tee "$WARNINGS_LOG" | cleanup | indent
+    export PRIVATE_INDEX_URL="$(cat "$ENV_DIR/PRIVATE_INDEX_URL")" && \
+      /app/.heroku/python/bin/pip install -r "$BUILD_DIR/$CLIENT_DIRNAME/requirements.txt" \
+      --index-url=PRIVATE_INDEX_URL \
+      --exists-action=w \
+      --src=/app/.heroku/src \
+      --disable-pip-version-check \
+      --no-cache-dir 2>&1 | tee "$WARNINGS_LOG" | cleanup | indent
     
     PIP_STATUS="${PIPESTATUS[0]}"
     set -e
